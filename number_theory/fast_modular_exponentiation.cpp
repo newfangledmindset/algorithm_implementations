@@ -10,7 +10,8 @@ typedef long long ll;
 ll fme(const ll& n, const ll& _k, const ll& m) {
     ll acc = 1, pow = n % m, k = _k;
     while (k > 0) {
-        if (k % 2 == 1) acc = (acc * pow) % m;
+        //bitwise하게 홀수 판정
+        if (k & 1) acc = (acc * pow) % m;
         pow = (pow * pow) % m;
         k = k >> 1;
     }
