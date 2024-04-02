@@ -11,8 +11,15 @@ typedef vector<int> vi;
 
 // BFS를 응용하자
 void find_shortest_path(const vector<vector<pi>>& adj, vector<bool>& visited, vi& distance, int v) {
+    
+    // weight을 기준으로 정렬
+    auto comp = [](pi s1, pi s2) -> bool {
+        return s1.S < s2.S;
+    };
+
     // 최소 거리부터 처리하기 위한 컨테이너
-    priority_queue<pi> q;
+    // 최적화 용도라 없어도 되긴 하는데 있으면 O(n log n)
+    priority_queue<pi, vector<pi>, decltype(comp)> q(comp);
 
     // 시작점 push
     q.push({v, 0});
@@ -25,8 +32,6 @@ void find_shortest_path(const vector<vector<pi>>& adj, vector<bool>& visited, vi
 
         if (visited[a]) continue;
         visited[a] = true;
-
-        
 
         for (auto& e : adj[a]) {
             // a -> b, with weight = w
