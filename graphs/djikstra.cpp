@@ -41,7 +41,7 @@ void find_shortest_path(const vector<vector<pi>>& adj, vector<bool>& visited, vi
                 distance[b] = distance[a] + w;
 
                 // -가 아니라 +면 최대 거리부터 처리됨
-                q.push({b, -w});
+                q.push({b, -distance[b]});
             }
         }
     }

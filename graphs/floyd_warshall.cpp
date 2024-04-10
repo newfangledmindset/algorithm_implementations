@@ -19,6 +19,7 @@ int adj[5][5] = {
 };
 
 int dist[5][5] = {0};
+int path[5][5] = {0};
 
 // distance matrix 생성
 void create_dist_mat() {
@@ -38,10 +39,30 @@ void find_shortest_path() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 // 자신과 (시작 -> 중간 -> 종착의 거리) 를 비교
-                dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+                if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                    // 경로 저장
+                    path[i][j] = k;
+                }
             }
         }
     }
+}
+
+// 경로 출력
+void print_path(const int &s, const int &t) {
+    if (path[s][t] != 0) {
+        print_path(s, path[s][t]);
+        cout << path[s][t] << ' ';
+        print_path(path[s][t], t);
+    }
+}
+
+// 출발, 도착점도 포함하여 출력
+void print_c_path(const int &s, const int &t) {
+    cout << s << ' ';
+    print_path(s, t);
+    cout << t << ' ';
 }
 
 int main() {
@@ -52,5 +73,6 @@ int main() {
     find_shortest_path();
 
     // from node(2) to node(4)
-    cout << dist[2][4];
+    cout << dist[2][4] << endl;
+    print_c_path(2, 4);
 }
