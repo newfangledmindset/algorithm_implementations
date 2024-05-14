@@ -42,8 +42,6 @@ int main() {
     unite(ds, size, 3, 6);
     unite(ds, size, 6, 8);
 
-    
-
     for (auto &x : ds) cout << x << ' ';
     cout << '\n';
     for (auto &x : size) cout << x << ' ';
