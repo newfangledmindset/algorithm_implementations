@@ -15,7 +15,11 @@ vi v_size;
 
 // Union-Find 구현
 int find(int x) {
-    while (x != v_link[x]) x = v_link[x];
+    while (x != v_link[x]) {
+        // path optimization
+        v_link[x] = v_link[v_link[x]];
+        x = v_link[x];
+    }
     return x;
 }
 
