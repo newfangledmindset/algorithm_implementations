@@ -13,7 +13,7 @@ constexpr int N = 1e4;
 int n;
 int t[2 * N];
 
-// init-index: 1
+// init-index: 0
 
 void build(int v1[]) {
     // Leaf node
