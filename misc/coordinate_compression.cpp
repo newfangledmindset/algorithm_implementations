@@ -20,13 +20,17 @@ int main() {
     vi c = v1;
 
     int n = v1.size();
-
+    
+    // sorting
     sort(c.begin(), c.end());
 
+    // make 'c' unique
     c.resize(unique(c.begin(), c.end()) - c.begin());
-    
+
+    // match index - value
     for (int i = 0; i < n; i++)
         v1[i] = lower_bound(c.begin(), c.end(), v1[i]) - c.begin();
 
+    // v1[i]: index, c[v1[i]]: value
     for (auto &x : v1) cout << x << ' ';
 }
