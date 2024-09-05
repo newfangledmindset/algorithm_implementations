@@ -11,6 +11,8 @@ typedef vector<int> vi;
 
 constexpr int K = 25;
 constexpr int MAX_N = 1e6 + 1;
+// N: size of v1
+constexpr int N = 1e4;
 
 /**
  * Sparse Table
@@ -23,6 +25,7 @@ constexpr int MAX_N = 1e6 + 1;
 
 // st[i][j]: Range query for [j, j + {2 ^ i} - 1]
 int st[K][MAX_N];
+vi v1;
 
 /*
  * [j, j + (2 ^ i) - 1] 아래와 같이 2개의 range로 분할 가능 (Divide-and-Conquer)
@@ -32,6 +35,9 @@ int st[K][MAX_N];
  *
  */
 void preprocess() {
+    // Copy v1 to the sparse table (st)
+    copy(v1.begin(), v1.end(), st[0]);
+
     // DP Approach
     for (int i = 1; i <= K; i++)
         for (int j = 0; j + (1 << i) <= N; j++)
