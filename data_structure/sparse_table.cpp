@@ -48,7 +48,7 @@ void preprocess() {
 int log_2(const ll i) {
     // C++20
     // return bit_width(i) - 1;
-    return i ? __builtin_clzll(1) - __builtin_clzll(i) - 1 : -1;
+    return i ? __builtin_clzll(1) - __builtin_clzll(i) : -1;
 }
 
 int min_query(const int L, const int R) {
