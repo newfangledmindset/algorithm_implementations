@@ -6,78 +6,49 @@
 using namespace std;
 typedef long long ll;
 typedef pair<int, int> pi;
+typedef pair<ll, ll> pll;
 typedef tuple<int, int, int> ti;
 typedef vector<int> vi;
 
-constexpr int n = 5;
+constexpr int N = 1e5;
+ll tree[N * 4]; // Segment tree
+vector<ll> v1(N);
 
-// Size of a segment tree: '최대' 4 * n
-int t[4 * n];
-
-// v: 현재 노드
-void build(int a[], int v, int tl, int tr) {
-    // Leaf node
-    if (tl == tr) t[v] = a[tl];
-    else {
-        // Left child: [tl, tm], Right child:[tm + 1, tr]
-        int tm = (tl + tr) / 2;
-
-        // Left chlid 방문
-        build(a, v * 2, tl, tm);
-
-        // Right child 방문
-        build(a, v * 2 + 1, tm + 1, tr);
-
-        // v: Parent, v * 2: Left child, v * 2 + 1: Right child
-        // children의 합이 parent node의 값
-        t[v] = t[v * 2] + t[v * 2 + 1];
-    }
+ll build(vector<ll> &input, int v, int l, int r) {
+    if (l == r) return tree[v] = input[l];
+    int m = (l + r) / 2;
+    return tree[v] = build(input, v * 2, l, m) + build(input, v * 2 + 1, m + 1, r);
 }
 
-int query(int v, int tl, int tr, int l, int r) {
-    // [l, r]: query 범위, [tl, tr]: Segment tree에서의 범위
-    if (l > r) return 0;
-
-    // Case 1: [l, r] == [tl, tr]
-    if (l == tl && r == tr) return t[v];
-
-    // Case 2, 3: [l, r]이 [tl, tr]에 포함됨
-    int tm = (tl + tr) / 2;
-
-    // Case 2, 3 구분 안하고 둘 다 방문 시도 (invalid해도 첫줄에서 걸러짐)
-    return query(v * 2, tl, tm, l, min(r, tm))
-        + query(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r);
+ll query(int v, int l, int r, const int wl, const int wr) {
+    if (l > wr || r < wl) return 0; // Identity
+    if (l >= wl && r <= wr) return tree[v]; // Total overlap
+    int m = (l + r) / 2;
+    return query(v * 2, l, m, wl, wr) + query(v * 2 + 1, m + 1, r, wl, wr);
 }
 
-void update(int v, int tl, int tr, int pos, int val) {
-    // Leaf node에 대해
-    if (tl == tr) t[v] = val;
-    else {
-        int tm = (tl + tr) / 2;
-
-        // Left child 방문
-        if (pos <= tm) update(v * 2, tl, tm, pos, val);
-        // Right child 방문
-        else update(v * 2 + 1, tm + 1, tr, pos, val);
-
-        // post-order => leaf node에서부터 올라오게
-        t[v] = t[v * 2] + t[v * 2 + 1];
-    }
+ll update(int v, int l, int r, const int pos, const int val) {
+    if (pos < l || pos > r) return tree[v];
+    if (pos == l && pos == r) return tree[v] = val;
+    int m = (l + r) / 2;
+    return tree[v] = update(v * 2, l, m, pos, val) + update(v * 2 + 1, m + 1, r, pos, val);
 }
 
 int main() {
+    cin.tie(NULL);
     ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
 
-    int v1[5] = { 1, 3, -2, 8, -7 };
+    int n, m, k;
+    cin >> n >> m >> k;
+    for (int i = 0; i < n; i++) cin >> v1[i];
+
     build(v1, 1, 0, n - 1);
 
-    // A: -2 + 8 + 7 = -1
-    cout << query(1, 0, n - 1, 2, 4) << '\n';
-
-    // v1[2] = 3 으로 업데이트
-    update(1, 0, n - 1, 2, 3);
-    
-    // A: 3 + 8 + -7 = 4
-    cout << query(1, 0, n - 1, 2, 4);
+    int q = m + k;
+    while (q--) {
+        int x, a, b;
+        cin >> x >> a >> b;
+        if (x == 1) update(1, 0, n - 1, a - 1, b);
+        else cout << query(1, 0, n - 1, a - 1, b - 1) << '\n';
+    }
 }

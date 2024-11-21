@@ -39,7 +39,7 @@ void preprocess() {
     copy(v1.begin(), v1.end(), st[0]);
 
     // DP Approach
-    for (int i = 1; i <= K; i++)
+    for (int i = 1; i < K; i++)
         for (int j = 0; j + (1 << i) <= N; j++)
             // 여기선 idempotent 함수로 min을 썼다
             st[i][j] = min(st[i - 1][j], st[i - 1][j + (1 << (i - 1))]);
